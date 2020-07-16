@@ -1,0 +1,69 @@
+{% extends 'navbar.html' %}
+
+{% block title_block %} {{user_other.username}} {% endblock%}
+
+{% block css_block %}
+        <style>
+            .profile{
+                     height: 355px;
+                     width: 450px;
+                     border: 1px solid #138496;
+                     border-radius: 10px;
+                     }
+
+             .crop{
+                     width: 370px;
+                     height: 220px;
+                     overflow: hidden;
+                     }
+              .crop img{
+                      width:38
+                      0px;
+                      height:280px;
+                      margin: 5px 0px 0px 30px;
+                      
+              }
+        </style>
+{% endblock css_block %}
+
+
+{% block body_block %}
+<center>
+    <div class='profile'>
+    {% if user_other.user_profile.profile_pic %}
+            <img class="rounded-circle" src="/media/{{user_other.user_profile.profile_pic}}" width="150px" height="150px">
+    {% else %}
+            <img class="rounded-circle" src="/media/default.png" width="150px" height="150px" adius="50%">
+    {% endif %}
+            <h3 style="text-align:center">{{user_other.username}}</h3>
+                <div>
+                {% if not already_followed %}
+                <a href="{% url 'App_Login:follow' username=user_other.username%}" class="btn btn-primary btn-sm">Follow</a>
+
+                {% else %}
+                <a href="{% url 'App_Login:unfollow' username=user_other.username %}" class="btn btn-primary btn-sm">Unfollow</a>
+                
+                {% endif %}
+                </div>
+                <br>
+
+            <h6 style="color:#C83C30"><b>{{user_other.post.count}} posts &nbsp;||&nbsp; {{user_other.following.count}} followers &nbsp;||&nbsp; {{user_other.follower.count}} Following</b></h6><hr>
+
+            <i>{{user_other.user_profile.description|linebreaks}}</i>
+            
+    </div><br><hr>
+
+    </center>
+
+    <div class="row">
+    {% for post in user_other.post.all%}  <!--using related_name-->
+        
+        <div class="crop">
+        <img src="/media/{{post.image}}" title="{{post.caption}}">
+        </div>
+        
+    {% endfor %}
+</div>
+<br><hr><hr>
+
+{% endblock body_block %}
